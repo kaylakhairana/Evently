@@ -1,1 +1,982 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Evently — Modern Event Planner Platform</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✨</text></svg>">
+</head>
+<body>
+  <div class="app-container">
+    <!-- SIDEBAR NAVIGATION -->
+    <aside class="app-sidebar" id="appSidebar">
+      <div class="sidebar-header">
+        <div class="brand">
+          <div class="brand-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+            </svg>
+          </div>
+          <div class="brand-text">
+            <h1>Evently</h1>
+            <span data-i18n="app_tagline">Platform Event Planner</span>
+          </div>
+        </div>
+        <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close Sidebar">&times;</button>
+      </div>
 
+      <!-- Active Event Box in Sidebar -->
+      <div class="sidebar-event-selector">
+        <div class="selector-label">
+          <span data-i18n="active_event_label">Acara Aktif</span>
+          <span id="sidebarEventDaysBadge" class="badge badge-lavender" style="font-size: 0.68rem; padding: 2px 6px;">42 hari</span>
+        </div>
+        <button class="event-dropdown-btn" id="quickSelectEventBtn">
+          <span class="truncate" id="sidebarActiveEventName">Memuat acara...</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Nav Links -->
+      <nav class="sidebar-nav">
+        <a class="nav-link active" data-view="dashboard">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+          </svg>
+          <span data-i18n="nav_dashboard">Dashboard</span>
+        </a>
+
+        <a class="nav-link" data-view="events">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+          <span data-i18n="nav_events">Kelola Acara</span>
+        </a>
+
+        <a class="nav-link" data-view="budget">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="1" x2="12" y2="23"></line>
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+          </svg>
+          <span data-i18n="nav_budget">Budget Planner</span>
+        </a>
+
+        <a class="nav-link" data-view="checklist">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 11l3 3L22 4"></path>
+            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+          </svg>
+          <span data-i18n="nav_checklist">Checklist Acara</span>
+        </a>
+
+        <a class="nav-link" data-view="rundown">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          <span data-i18n="nav_rundown">Rundown & Timeline</span>
+        </a>
+      </nav>
+
+      <!-- Sidebar Footer (Lang & Currency) -->
+      <div class="sidebar-footer">
+        <div class="language-switcher">
+          <button class="lang-btn active" data-lang="id">
+            <span>🇮🇩</span> Indonesia
+          </button>
+          <button class="lang-btn" data-lang="en">
+            <span>🇬🇧</span> English
+          </button>
+        </div>
+
+        <div class="currency-toggle">
+          <span data-i18n="currency_switch">Mata Uang:</span>
+          <div class="currency-pills">
+            <button class="curr-btn active" data-curr="IDR">IDR (Rp)</button>
+            <button class="curr-btn" data-curr="USD">USD ($)</button>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN WRAPPER -->
+    <main class="app-main">
+      <!-- TOP HEADER -->
+      <header class="top-header">
+        <div class="header-left">
+          <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+          <div class="header-event-badge">
+            <span class="event-dot"></span>
+            <span class="header-event-name" id="topHeaderEventTitle">Acara</span>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <button class="btn btn-secondary btn-sm" id="headerSwitchEventBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
+              <line x1="4" y1="22" x2="4" y2="15"></line>
+            </svg>
+            <span data-i18n="nav_switch_event">Pilih Acara</span>
+          </button>
+          <button class="btn btn-primary btn-sm" id="headerNewEventBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span data-i18n="btn_create_event">+ Acara Baru</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- CONTENT BODY -->
+      <div class="content-body">
+
+        <!-- ========================================================
+             VIEW 1: DASHBOARD
+             ======================================================== -->
+        <section class="view-section active" id="view-dashboard">
+          <!-- Hero Event Banner -->
+          <div class="hero-banner">
+            <div>
+              <div class="hero-tag-group">
+                <span class="badge badge-lavender" id="dashCategoryBadge">Pernikahan</span>
+                <span class="badge badge-babyblue" id="dashGuestsBadge">350 Tamu</span>
+              </div>
+              <h2 class="hero-title" id="dashEventTitle">Luna & Adrian's Enchanted Wedding</h2>
+              <div class="hero-meta">
+                <div class="meta-item">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                  </svg>
+                  <span id="dashEventDate">Sabtu, 28 Des 2026</span>
+                </div>
+                <div class="meta-item">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                  </svg>
+                  <span id="dashEventTime">15:30 WIB</span>
+                </div>
+                <div class="meta-item">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                  </svg>
+                  <span id="dashEventLocation">The Glass House Garden & Ballroom, Jakarta</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Countdown Box -->
+            <div class="hero-countdown-box">
+              <div class="countdown-number" id="dashCountdownNumber">42</div>
+              <div class="countdown-label" id="dashCountdownLabel" data-i18n="dash_countdown_days">hari lagi</div>
+            </div>
+          </div>
+
+          <!-- 4 Stats Cards Grid -->
+          <div class="stats-grid">
+            <!-- 1. Total Budget -->
+            <div class="stat-card">
+              <div class="stat-top">
+                <span class="stat-title" data-i18n="dash_stat_budget">Total Anggaran</span>
+                <div class="stat-icon purple">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="1" x2="12" y2="23"></line>
+                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                  </svg>
+                </div>
+              </div>
+              <div class="stat-value" id="dashStatTargetBudget">Rp 150.000.000</div>
+              <div class="stat-footer">
+                <span>Alokasi Pagu</span>
+                <span class="stat-pill badge-lavender" id="dashBudgetCountBadge">7 pos</span>
+              </div>
+            </div>
+
+            <!-- 2. Actual Spent -->
+            <div class="stat-card">
+              <div class="stat-top">
+                <span class="stat-title" data-i18n="dash_stat_spent">Pengeluaran Real</span>
+                <div class="stat-icon blue">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
+                    <path d="M22 12A10 10 0 0 0 12 2v10z"></path>
+                  </svg>
+                </div>
+              </div>
+              <div class="stat-value" id="dashStatActualSpent">Rp 140.200.000</div>
+              <div>
+                <div class="stat-footer">
+                  <span id="dashStatSpentPercentText">93% terpakai</span>
+                  <span class="stat-pill badge-babyblue" id="dashStatSpentStatus">Stabil</span>
+                </div>
+                <div class="progress-bar-container">
+                  <div class="progress-bar-fill" id="dashSpentProgressBar" style="width: 93%;"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3. Remaining Funds -->
+            <div class="stat-card">
+              <div class="stat-top">
+                <span class="stat-title" data-i18n="dash_stat_remaining">Sisa Dana</span>
+                <div class="stat-icon green" id="dashRemainingIcon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                  </svg>
+                </div>
+              </div>
+              <div class="stat-value" id="dashStatRemainingFunds">Rp 9.800.000</div>
+              <div class="stat-footer">
+                <span id="dashRemainingStatusLabel">Kondisi Finansial</span>
+                <span class="stat-pill badge-success" id="dashRemainingBadge">Aman</span>
+              </div>
+            </div>
+
+            <!-- 4. Checklist Progress -->
+            <div class="stat-card">
+              <div class="stat-top">
+                <span class="stat-title" data-i18n="dash_stat_checklist">Progress Persiapan</span>
+                <div class="stat-icon amber">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 11l3 3L22 4"></path>
+                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                  </svg>
+                </div>
+              </div>
+              <div class="stat-value" id="dashStatChecklistRatio">6 / 9</div>
+              <div>
+                <div class="stat-footer">
+                  <span id="dashChecklistPercentText">67% selesai</span>
+                  <span class="stat-pill badge-warning" id="dashChecklistBadge">On Track</span>
+                </div>
+                <div class="progress-bar-container">
+                  <div class="progress-bar-fill success" id="dashChecklistProgressBar" style="width: 67%;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Split Dashboard Content -->
+          <div class="dashboard-grid">
+            <!-- Left Side: Tasks & Upcoming Agenda -->
+            <div>
+              <!-- Quick Actions -->
+              <div class="dash-card">
+                <div class="dash-card-header">
+                  <h3 class="dash-card-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                    </svg>
+                    <span data-i18n="dash_quick_actions">Aksi Cepat</span>
+                  </h3>
+                </div>
+                <div class="quick-actions-grid">
+                  <button class="quick-action-btn" id="dashQuickAddExpenseBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <line x1="12" y1="1" x2="12" y2="23"></line>
+                      <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                    </svg>
+                    <div>
+                      <div data-i18n="dash_quick_expense">+ Pengeluaran</div>
+                      <small style="color: var(--text-muted); font-size: 0.72rem;">Catat pos biaya baru</small>
+                    </div>
+                  </button>
+
+                  <button class="quick-action-btn" id="dashQuickAddTaskBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M9 11l3 3L22 4"></path>
+                      <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                    </svg>
+                    <div>
+                      <div data-i18n="dash_quick_task">+ Checklist</div>
+                      <small style="color: var(--text-muted); font-size: 0.72rem;">Tambah tugas persiapan</small>
+                    </div>
+                  </button>
+
+                  <button class="quick-action-btn" id="dashQuickAddRundownBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                    <div>
+                      <div data-i18n="dash_quick_rundown">+ Rundown</div>
+                      <small style="color: var(--text-muted); font-size: 0.72rem;">Atur jadwal hari-H</small>
+                    </div>
+                  </button>
+
+                  <button class="quick-action-btn" id="dashQuickAddEventBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                      <line x1="16" y1="2" x2="16" y2="6"></line>
+                      <line x1="8" y1="2" x2="8" y2="6"></line>
+                      <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                    <div>
+                      <div data-i18n="btn_create_event">+ Acara Baru</div>
+                      <small style="color: var(--text-muted); font-size: 0.72rem;">Rencanakan acara lain</small>
+                    </div>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Upcoming Critical Tasks -->
+              <div class="dash-card">
+                <div class="dash-card-header">
+                  <h3 class="dash-card-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                    </svg>
+                    <span data-i18n="dash_upcoming_tasks">Tugas Kritis Terdekat</span>
+                  </h3>
+                  <button class="btn btn-secondary btn-sm" data-nav="checklist">Lihat Semua</button>
+                </div>
+                <div id="dashUpcomingTasksList">
+                  <!-- Populated by JS -->
+                </div>
+              </div>
+
+              <!-- Event Day Highlight Rundown -->
+              <div class="dash-card">
+                <div class="dash-card-header">
+                  <h3 class="dash-card-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                    <span data-i18n="dash_upcoming_agenda">Highlight Rundown Hari-H</span>
+                  </h3>
+                  <button class="btn btn-secondary btn-sm" data-nav="rundown">Buka Rundown</button>
+                </div>
+                <div id="dashUpcomingRundownList">
+                  <!-- Populated by JS -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Side: Budget Breakdown & Event Meta -->
+            <div>
+              <!-- Budget Distribution -->
+              <div class="dash-card">
+                <div class="dash-card-header">
+                  <h3 class="dash-card-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
+                      <path d="M22 12A10 10 0 0 0 12 2v10z"></path>
+                    </svg>
+                    <span data-i18n="dash_budget_distribution">Distribusi Pengeluaran</span>
+                  </h3>
+                  <button class="btn btn-secondary btn-sm" data-nav="budget">Detail</button>
+                </div>
+                <div id="dashBudgetCategoryList">
+                  <!-- Populated by JS -->
+                </div>
+              </div>
+
+              <!-- Event Details Card -->
+              <div class="dash-card" style="background: linear-gradient(180deg, #FFFFFF 0%, #F5F3FF 100%);">
+                <div class="dash-card-header">
+                  <h3 class="dash-card-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <line x1="12" y1="16" x2="12" y2="12"></line>
+                      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                    <span>Deskripsi & Catatan</span>
+                  </h3>
+                  <button class="btn btn-secondary btn-sm" id="dashEditEventBtn" data-i18n="btn_edit_event">Edit Acara</button>
+                </div>
+                <p id="dashEventDescription" style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 16px;">
+                  Pernikahan tema modern botanical lavender.
+                </p>
+                <div style="font-size: 0.82rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 8px;">
+                  <div><strong>Kategori:</strong> <span id="dashEventCatName">Pernikahan</span></div>
+                  <div><strong>Lokasi:</strong> <span id="dashEventVenue">The Glass House</span></div>
+                  <div><strong>Target Tamu:</strong> <span id="dashEventTargetGuests">350 Orang</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================================
+             VIEW 2: EVENTS MANAGER
+             ======================================================== -->
+        <section class="view-section" id="view-events">
+          <div class="section-header">
+            <div class="section-header-text">
+              <h2 data-i18n="events_heading">Kelola Semua Acara</h2>
+              <p data-i18n="events_subheading">Atur berbagai perayaan, seminar, atau pesta dalam satu tempat terpadu.</p>
+            </div>
+            <div class="section-header-actions">
+              <button class="btn btn-primary" id="eventsCreateBtn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                <span data-i18n="events_btn_new">+ Buat Acara Baru</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="events-grid" id="eventsListGrid">
+            <!-- Populated by JS -->
+          </div>
+        </section>
+
+        <!-- ========================================================
+             VIEW 3: BUDGET PLANNER
+             ======================================================== -->
+        <section class="view-section" id="view-budget">
+          <div class="section-header">
+            <div class="section-header-text">
+              <h2 data-i18n="budget_heading">Budget & Expense Planner</h2>
+              <p data-i18n="budget_subheading">Pantau alokasi, pengeluaran aktual, dan sisa dana acara secara transparan.</p>
+            </div>
+            <div class="section-header-actions">
+              <button class="btn btn-secondary" id="budgetExportCsvBtn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                <span data-i18n="btn_export_csv">Export CSV</span>
+              </button>
+              <button class="btn btn-secondary" onclick="window.print()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                  <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                  <rect x="6" y="14" width="12" height="8"></rect>
+                </svg>
+                <span data-i18n="btn_export_pdf">Cetak PDF</span>
+              </button>
+              <button class="btn btn-primary" id="budgetAddExpenseBtn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                <span data-i18n="budget_btn_add">+ Catat Pengeluaran</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Budget Summary Banner -->
+          <div class="budget-summary-banner">
+            <div class="budget-stats-row">
+              <div class="budget-metric-box">
+                <span class="metric-title" data-i18n="budget_summary_total">Alokasi Anggaran</span>
+                <span class="metric-number" id="budgetPageTarget">Rp 150.000.000</span>
+              </div>
+              <div class="budget-metric-box">
+                <span class="metric-title" data-i18n="budget_summary_spent">Total Pengeluaran Real</span>
+                <span class="metric-number highlight-spent" id="budgetPageSpent">Rp 140.200.000</span>
+              </div>
+              <div class="budget-metric-box">
+                <span class="metric-title" data-i18n="budget_summary_remaining">Sisa Dana</span>
+                <span class="metric-number highlight-green" id="budgetPageRemaining">Rp 9.800.000</span>
+              </div>
+              <div class="budget-metric-box">
+                <span class="metric-title" data-i18n="budget_summary_percent">Persentase Terpakai</span>
+                <span class="metric-number" id="budgetPagePercent">93%</span>
+              </div>
+            </div>
+            <div class="progress-bar-container" style="height: 10px;">
+              <div class="progress-bar-fill" id="budgetPageProgressBar" style="width: 93%;"></div>
+            </div>
+          </div>
+
+          <!-- Filter & Search Bar -->
+          <div class="filter-bar">
+            <div class="search-box">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input type="text" class="search-input" id="budgetSearchInput" placeholder="Cari nama pengeluaran atau vendor..." data-i18n-placeholder="search_placeholder">
+            </div>
+
+            <div class="filter-pills" id="budgetStatusFilterPills">
+              <button class="filter-pill active" data-status="all" data-i18n="budget_filter_status">Semua Status</button>
+              <button class="filter-pill" data-status="paid" data-i18n="budget_status_paid">Lunas</button>
+              <button class="filter-pill" data-status="deposit" data-i18n="budget_status_deposit">DP</button>
+              <button class="filter-pill" data-status="unpaid" data-i18n="budget_status_unpaid">Belum Dibayar</button>
+            </div>
+          </div>
+
+          <!-- Expenses Table -->
+          <div class="table-card">
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th data-i18n="budget_th_item">Item Pengeluaran</th>
+                    <th data-i18n="budget_th_category">Kategori</th>
+                    <th data-i18n="budget_th_estimated">Estimasi</th>
+                    <th data-i18n="budget_th_actual">Realisasi (Aktual)</th>
+                    <th data-i18n="budget_th_status">Status</th>
+                    <th data-i18n="budget_th_notes">Catatan</th>
+                    <th data-i18n="budget_th_action" style="text-align: right;">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="budgetTableBody">
+                  <!-- Populated by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================================
+             VIEW 4: CHECKLIST PERSIPAN ACARA
+             ======================================================== -->
+        <section class="view-section" id="view-checklist">
+          <div class="section-header">
+            <div class="section-header-text">
+              <h2 data-i18n="checklist_heading">Checklist Persiapan Acara</h2>
+              <p data-i18n="checklist_subheading">Pantau seluruh to-do list persiapan agar tidak ada detail yang terlewat.</p>
+            </div>
+            <div class="section-header-actions">
+              <button class="btn btn-primary" id="checklistAddTaskBtn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                <span data-i18n="checklist_btn_add">+ Tambah Tugas</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Progress Overview Card -->
+          <div class="checklist-progress-card">
+            <div class="checklist-progress-header">
+              <div>
+                <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 2px;">Tingkat Kesiapan Acara</h3>
+                <span style="font-size: 0.85rem; color: var(--text-muted);" id="checklistCompletionCountText">6 dari 9 tugas telah selesai</span>
+              </div>
+              <div style="font-size: 1.8rem; font-family: 'Outfit', sans-serif; font-weight: 800; color: var(--primary);" id="checklistCompletionPercent">
+                67%
+              </div>
+            </div>
+            <div class="progress-bar-container" style="height: 10px;">
+              <div class="progress-bar-fill success" id="checklistMainProgressBar" style="width: 67%;"></div>
+            </div>
+          </div>
+
+          <!-- Quick Inline Task Input -->
+          <form class="checklist-quick-add-box" id="checklistQuickForm">
+            <input type="text" class="form-control" id="checklistQuickInput" placeholder="Ketik tugas baru lalu tekan Enter..." data-i18n-placeholder="checklist_quick_placeholder" required>
+            <button type="submit" class="btn btn-secondary" style="background: var(--bg-card); flex-shrink: 0;" data-i18n="btn_add_quick">
+              + Tambah Cepat
+            </button>
+          </form>
+
+          <!-- Filters Bar -->
+          <div class="filter-bar">
+            <div class="search-box">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input type="text" class="search-input" id="checklistSearchInput" placeholder="Cari nama tugas..." data-i18n-placeholder="search_placeholder">
+            </div>
+
+            <div class="filter-pills" id="checklistStatusPills">
+              <button class="filter-pill active" data-filter="all" data-i18n="checklist_all_filter">Semua</button>
+              <button class="filter-pill" data-filter="pending" data-i18n="checklist_pending_filter">Belum Selesai</button>
+              <button class="filter-pill" data-filter="completed" data-i18n="checklist_completed_filter">Selesai</button>
+            </div>
+          </div>
+
+          <!-- Task Items Grouped By Stage -->
+          <div id="checklistTasksContainer">
+            <!-- Populated by JS -->
+          </div>
+        </section>
+
+        <!-- ========================================================
+             VIEW 5: TIMELINE & RUNDOWN ACARA
+             ======================================================== -->
+        <section class="view-section" id="view-rundown">
+          <div class="section-header">
+            <div class="section-header-text">
+              <h2 data-i18n="rundown_heading">Timeline & Rundown Acara</h2>
+              <p data-i18n="rundown_subheading">Susun jadwal menit demi menit hari-H agar pelaksanaan lancar dan tertata.</p>
+            </div>
+            <div class="section-header-actions">
+              <button class="btn btn-secondary" onclick="window.print()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                  <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                  <rect x="6" y="14" width="12" height="8"></rect>
+                </svg>
+                <span data-i18n="btn_export_pdf">Cetak Rundown</span>
+              </button>
+              <button class="btn btn-primary" id="rundownAddBtn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                <span data-i18n="rundown_btn_add">+ Tambah Agenda</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Day Switcher & Search -->
+          <div class="filter-bar">
+            <div class="search-box">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input type="text" class="search-input" id="rundownSearchInput" placeholder="Cari kegiatan atau PIC..." data-i18n-placeholder="search_placeholder">
+            </div>
+
+            <div class="filter-pills" id="rundownDayPills">
+              <button class="filter-pill active" data-day="1" data-i18n="rundown_day_1">Hari 1 / Utama</button>
+              <button class="filter-pill" data-day="2" data-i18n="rundown_day_2">Hari 2 (Lanjutan)</button>
+            </div>
+          </div>
+
+          <!-- Timeline Items Container -->
+          <div class="timeline-card-wrapper" id="rundownTimelineContainer">
+            <!-- Populated by JS -->
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ========================================================
+       MODALS
+       ======================================================== -->
+
+  <!-- 1. Event Modal (Create / Edit) -->
+  <div class="modal-overlay" id="eventModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title" id="eventModalTitle" data-i18n="modal_title_new_event">Buat Acara Baru</h3>
+        <button class="modal-close-btn" data-close-modal>&times;</button>
+      </div>
+      <form id="eventForm">
+        <input type="hidden" id="eventFormId">
+        <div class="modal-body">
+          <div class="input-group">
+            <label class="input-label" data-i18n="field_event_title">Nama Acara</label>
+            <input type="text" class="form-control" id="eventFormTitle" placeholder="cth: Luna & Adrian's Wedding" required>
+          </div>
+
+          <div class="form-row">
+            <div class="input-group">
+              <label class="input-label" data-i18n="field_event_category">Kategori Acara</label>
+              <select class="form-control" id="eventFormCategory">
+                <option value="wedding" data-i18n="cat_wedding">Pernikahan</option>
+                <option value="birthday" data-i18n="cat_birthday">Ulang Tahun</option>
+                <option value="corporate" data-i18n="cat_corporate">Corporate / Seminar</option>
+                <option value="concert" data-i18n="cat_concert">Konser / Musik</option>
+                <option value="anniversary" data-i18n="cat_anniversary">Ulang Tahun Pernikahan</option>
+                <option value="party" data-i18n="cat_party">Pesta & Gathering</option>
+                <option value="exhibition" data-i18n="cat_exhibition">Pameran & Bazar</option>
+                <option value="other" data-i18n="cat_other">Acara Lainnya</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label class="input-label" data-i18n="field_event_theme">Tema Warna</label>
+              <select class="form-control" id="eventFormTheme">
+                <option value="lavender">Lavender Dream (Ungu Soft)</option>
+                <option value="babyblue">Sky Horizon (Baby Blue)</option>
+                <option value="softpurple">Velvet Pastel (Pink-Purple)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="input-group">
+              <label class="input-label" data-i18n="field_event_date">Tanggal Acara</label>
+              <input type="date" class="form-control" id="eventFormDate" required>
+            </div>
+            <div class="input-group">
+              <label class="input-label" data-i18n="field_event_time">Waktu Mulai</label>
+              <input type="time" class="form-control" id="eventFormTime" value="10:00" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="input-group">
+              <label class="input-label" data-i18n="field_event_guests">Estimasi Jumlah Tamu</label>
+              <input type="number" class="form-control" id="eventFormGuests" placeholder="350" min="1" value="100" required>
+            </div>
+            <div class="input-group">
+              <label class="input-label" data-i18n="field_event_budget">Target Total Anggaran</label>
+              <input type="text" class="form-control" id="eventFormBudget" placeholder="100000000" required>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label" data-i18n="field_event_location">Lokasi / Venue</label>
+            <input type="text" class="form-control" id="eventFormLocation" placeholder="Nama gedung, ballroom, atau alamat..." required>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label" data-i18n="field_event_desc">Deskripsi & Catatan Acara</label>
+            <textarea class="form-control" id="eventFormDesc" rows="3" placeholder="Konsep tema, catatan khusus, dsb."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-close-modal data-i18n="btn_cancel">Batal</button>
+          <button type="submit" class="btn btn-primary" data-i18n="btn_save">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 2. Expense Modal (Add / Edit) -->
+  <div class="modal-overlay" id="expenseModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title" id="expenseModalTitle" data-i18n="modal_title_new_expense">Tambah Pengeluaran</h3>
+        <button class="modal-close-btn" data-close-modal>&times;</button>
+      </div>
+      <form id="expenseForm">
+        <input type="hidden" id="expenseFormId">
+        <div class="modal-body">
+          <div class="input-group">
+            <label class="input-label" data-i18n="field_expense_name">Deskripsi Pengeluaran / Vendor</label>
+            <input type="text" class="form-control" id="expenseFormName" placeholder="cth: Gedung Grand Ballroom" required>
+          </div>
+
+          <div class="form-row">
+            <div class="input-group">
+              <label class="input-label" data-i18n="field_expense_category">Kategori Biaya</label>
+              <select class="form-control" id="expenseFormCategory">
+                <option value="venue" data-i18n="exp_cat_venue">Venue & Gedung</option>
+                <option value="catering" data-i18n="exp_cat_catering">Katering & Makanan</option>
+                <option value="decor" data-i18n="exp_cat_decor">Dekorasi & Bunga</option>
+                <option value="attire" data-i18n="exp_cat_attire">Busana & Rias (MUA)</option>
+                <option value="photo" data-i18n="exp_cat_photo">Dokumentasi (Foto & Video)</option>
+                <option value="entertainment" data-i18n="exp_cat_entertainment">Hiburan & Sound</option>
+                <option value="souvenir" data-i18n="exp_cat_souvenir">Undangan & Souvenir</option>
+                <option value="logistic" data-i18n="exp_cat_logistic">Logistik & Transportasi</option>
+                <option value="marketing" data-i18n="exp_cat_marketing">Promosi & Publikasi</option>
+                <option value="other" data-i18n="exp_cat_other">Kebutuhan Tak Terduga</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label class="input-label" data-i18n="field_expense_status">Status Pembayaran</label>
+              <select class="form-control" id="expenseFormStatus">
+                <option value="paid" data-i18n="budget_status_paid">Lunas</option>
+                <option value="deposit" data-i18n="budget_status_deposit">DP (Uang Muka)</option>
+                <option value="unpaid" data-i18n="budget_status_unpaid">Belum Dibayar</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="input-group">
+              <label class="input-label" data-i18n="field_expense_estimated">Biaya Estimasi</label>
+              <input type="text" class="form-control" id="expenseFormEstimated" placeholder="cth: 25000000" required>
+            </div>
+            <div class="input-group">
+              <label class="input-label" data-i18n="field_expense_actual">Biaya Realisasi / Bayar</label>
+              <input type="text" class="form-control" id="expenseFormActual" placeholder="cth: 20000000" required>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label" data-i18n="field_expense_notes">Catatan & Kontak Vendor</label>
+            <textarea class="form-control" id="expenseFormNotes" rows="2" placeholder="Nomor rekening, PIC vendor, invoice ID, dsb."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-close-modal data-i18n="btn_cancel">Batal</button>
+          <button type="submit" class="btn btn-primary" data-i18n="btn_save">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 3. Task Modal (Add / Edit) -->
+  <div class="modal-overlay" id="taskModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title" id="taskModalTitle" data-i18n="modal_title_new_task">Tambah Checklist Persiapan</h3>
+        <button class="modal-close-btn" data-close-modal>&times;</button>
+      </div>
+      <form id="taskForm">
+        <input type="hidden" id="taskFormId">
+        <div class="modal-body">
+          <div class="input-group">
+            <label class="input-label" data-i18n="field_task_title">Nama Tugas</label>
+            <input type="text" class="form-control" id="taskFormTitle" placeholder="cth: Booking MUA & Test Makeup" required>
+          </div>
+
+          <div class="form-row">
+            <div class="input-group">
+              <label class="input-label" data-i18n="field_task_stage">Tahapan Persiapan</label>
+              <select class="form-control" id="taskFormStage">
+                <option value="h90" data-i18n="checklist_stage_h90">Persiapan Awal (H-90)</option>
+                <option value="h30" data-i18n="checklist_stage_h30">1 Bulan Sebelumnya (H-30)</option>
+                <option value="h7" data-i18n="checklist_stage_h7">1 Minggu Terakhir (H-7)</option>
+                <option value="hday" data-i18n="checklist_stage_hday">Hari-H (D-Day)</option>
+                <option value="post" data-i18n="checklist_stage_post">Pasca Acara</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label class="input-label" data-i18n="field_task_priority">Prioritas</label>
+              <select class="form-control" id="taskFormPriority">
+                <option value="high" data-i18n="checklist_priority_high">Tinggi (Urgent)</option>
+                <option value="medium" selected data-i18n="checklist_priority_medium">Sedang</option>
+                <option value="low" data-i18n="checklist_priority_low">Rendah</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="input-group">
+              <label class="input-label" data-i18n="field_task_due">Batas Waktu (Due Date)</label>
+              <input type="date" class="form-control" id="taskFormDue">
+            </div>
+            <div class="input-group">
+              <label class="input-label" data-i18n="field_task_pic">PIC / Penanggung Jawab</label>
+              <input type="text" class="form-control" id="taskFormPic" placeholder="cth: Adrian / WO Coordinator">
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label" data-i18n="field_task_notes">Catatan & Detail</label>
+            <textarea class="form-control" id="taskFormNotes" rows="2" placeholder="Instruksi tambahan..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-close-modal data-i18n="btn_cancel">Batal</button>
+          <button type="submit" class="btn btn-primary" data-i18n="btn_save">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 4. Rundown Modal (Add / Edit) -->
+  <div class="modal-overlay" id="rundownModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title" id="rundownModalTitle" data-i18n="modal_title_new_rundown">Tambah Agenda Rundown</h3>
+        <button class="modal-close-btn" data-close-modal>&times;</button>
+      </div>
+      <form id="rundownForm">
+        <input type="hidden" id="rundownFormId">
+        <div class="modal-body">
+          <div class="input-group">
+            <label class="input-label" data-i18n="field_rundown_title">Nama Kegiatan / Sesi</label>
+            <input type="text" class="form-control" id="rundownFormTitle" placeholder="cth: Grand Entrance & Opening Dance" required>
+          </div>
+
+          <div class="form-row-3">
+            <div class="input-group">
+              <label class="input-label" data-i18n="rundown_day_label">Hari</label>
+              <select class="form-control" id="rundownFormDay">
+                <option value="1" data-i18n="rundown_day_1">Hari 1 / Utama</option>
+                <option value="2" data-i18n="rundown_day_2">Hari 2</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label class="input-label" data-i18n="field_rundown_start">Waktu Mulai</label>
+              <input type="time" class="form-control" id="rundownFormStart" value="16:30" required>
+            </div>
+            <div class="input-group">
+              <label class="input-label" data-i18n="field_rundown_end">Waktu Selesai</label>
+              <input type="time" class="form-control" id="rundownFormEnd" value="17:00" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="input-group">
+              <label class="input-label" data-i18n="field_rundown_location">Lokasi / Area</label>
+              <input type="text" class="form-control" id="rundownFormLocation" placeholder="cth: Grand Ballroom Stage">
+            </div>
+            <div class="input-group">
+              <label class="input-label" data-i18n="field_rundown_pic">PIC / Penanggung Jawab</label>
+              <input type="text" class="form-control" id="rundownFormPic" placeholder="cth: MC & Band">
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label" data-i18n="field_rundown_notes">Instruksi / Catatan Teknis</label>
+            <textarea class="form-control" id="rundownFormNotes" rows="2" placeholder="Detail lighting, sound, koordinasi dengan usher..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-close-modal data-i18n="btn_cancel">Batal</button>
+          <button type="submit" class="btn btn-primary" data-i18n="btn_save">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 5. Switch Event Selector Modal -->
+  <div class="modal-overlay" id="switchEventModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title" data-i18n="nav_switch_event">Pilih Acara</h3>
+        <button class="modal-close-btn" data-close-modal>&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="switchEventList" style="display: flex; flex-direction: column; gap: 10px;">
+          <!-- List of events populated by JS -->
+        </div>
+      </div>
+      <div class="modal-footer" style="justify-content: space-between;">
+        <button type="button" class="btn btn-primary btn-sm" id="switchModalNewEventBtn" data-i18n="btn_create_event">+ Acara Baru</button>
+        <button type="button" class="btn btn-secondary btn-sm" data-close-modal data-i18n="btn_close">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. Confirmation Modal -->
+  <div class="modal-overlay" id="confirmModal">
+    <div class="modal-box" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3 class="modal-title" style="color: var(--status-danger);">Konfirmasi Hapus</h3>
+        <button class="modal-close-btn" data-close-modal>&times;</button>
+      </div>
+      <div class="modal-body">
+        <p id="confirmModalMessage" style="font-size: 0.95rem; color: var(--text-secondary); line-height: 1.5;">
+          Apakah Anda yakin ingin menghapus data ini?
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-close-modal data-i18n="btn_cancel">Batal</button>
+        <button type="button" class="btn btn-danger" id="confirmModalActionBtn" data-i18n="btn_delete_confirm">Ya, Hapus</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Application Scripts -->
+  <script src="js/i18n.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
